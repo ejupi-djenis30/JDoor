@@ -9,7 +9,7 @@
     <version>1.0.0</version>
     <name>JDoor Assist</name>
     <description>Consent-first, encrypted remote assistance for trusted local networks.</description>
-    <url>https://github.com/NobodyToListen/JDoor</url>
+    <url>https://github.com/ejupi-djenis30/JDoor</url>
 
     <licenses>
         <license>
@@ -21,19 +21,15 @@
 
     <developers>
         <developer>
-            <name>Djenis Ejupi</name>
-            <url>https://djenis.ejupilabs.com</url>
-        </developer>
-        <developer>
-            <name>NobodyToListen</name>
-            <url>https://github.com/NobodyToListen</url>
+            <name>JDoor contributors</name>
+            <url>https://github.com/ejupi-djenis30/JDoor/graphs/contributors</url>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/NobodyToListen/JDoor.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/NobodyToListen/JDoor.git</developerConnection>
-        <url>https://github.com/NobodyToListen/JDoor</url>
+        <connection>scm:git:https://github.com/ejupi-djenis30/JDoor.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/ejupi-djenis30/JDoor.git</developerConnection>
+        <url>https://github.com/ejupi-djenis30/JDoor</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -276,7 +272,7 @@
                                     <manifestEntries>
                                         <Implementation-Title>${project.name}</Implementation-Title>
                                         <Implementation-Version>${project.version}</Implementation-Version>
-                                        <Implementation-Vendor>Djenis Ejupi and contributors</Implementation-Vendor>
+                                        <Implementation-Vendor>JDoor contributors</Implementation-Vendor>
                                     </manifestEntries>
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>

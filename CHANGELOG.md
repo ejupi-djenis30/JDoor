@@ -34,5 +34,5 @@ Semantic Versioning.
 - Implicit keyboard/mouse control.
 - “Backdoor” positioning, debug prints, IntelliJ GUI form dependency, and dead code.
 
-[Unreleased]: https://github.com/NobodyToListen/JDoor/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/NobodyToListen/JDoor/releases/tag/v1.0.0
+[Unreleased]: https://github.com/ejupi-djenis30/JDoor/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/ejupi-djenis30/JDoor/releases/tag/v1.0.0

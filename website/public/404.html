@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#F4F1EA" />
     <meta name="robots" content="noindex, follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'none'; connect-src 'none'; form-action 'none'; frame-src 'none'; img-src 'self' data:; object-src 'none'; script-src 'none'; style-src 'self'; upgrade-insecure-requests"
+    />
     <title>Page not found — JDoor</title>
-    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
-    <link rel="stylesheet" href="/styles.css?v=4" />
+    <link rel="icon" href="/JDoor/favicon.svg?v=2" type="image/svg+xml" />
+    <link rel="stylesheet" href="/JDoor/styles.css?v=4" />
   </head>
   <body class="error-page">
     <a class="skip-link" href="#main-content">Skip to content</a>
     <header class="site-header">
       <div class="site-header__inner shell">
-        <a class="brand" href="/" aria-label="JDoor home">
-          <img src="/favicon.svg?v=2" width="40" height="40" alt="" />
+        <a class="brand" href="/JDoor/" aria-label="JDoor home">
+          <img src="/JDoor/favicon.svg?v=2" width="40" height="40" alt="" />
           <span class="brand__name">JDoor</span>
           <span class="brand__descriptor">Remote assistance</span>
         </a>
@@ -31,7 +36,7 @@
         This address does not map to the project dossier. Return to JDoor to review its origin,
         session boundary, current limits and source.
       </p>
-      <a class="button button--action" href="/">
+      <a class="button button--action" href="/JDoor/">
         <span>Return to JDoor</span><span aria-hidden="true">↗</span>
       </a>
     </main>

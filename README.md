@@ -2,20 +2,19 @@
 
 Consent-first, encrypted remote assistance for trusted local networks.
 
-[Official website](https://jdoor.ejupilabs.com/) ·
-[Source](https://github.com/NobodyToListen/JDoor) ·
+[Official website](https://ejupi-djenis30.github.io/JDoor/) ·
+[Source](https://github.com/ejupi-djenis30/JDoor) ·
 [Security policy](SECURITY.md)
 
-[![CI](https://github.com/NobodyToListen/JDoor/actions/workflows/ci.yml/badge.svg)](https://github.com/NobodyToListen/JDoor/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/NobodyToListen/JDoor/actions/workflows/codeql.yml/badge.svg)](https://github.com/NobodyToListen/JDoor/actions/workflows/codeql.yml)
+[![CI](https://github.com/ejupi-djenis30/JDoor/actions/workflows/ci.yml/badge.svg)](https://github.com/ejupi-djenis30/JDoor/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/ejupi-djenis30/JDoor/actions/workflows/codeql.yml/badge.svg)](https://github.com/ejupi-djenis30/JDoor/actions/workflows/codeql.yml)
 [![Java 21](https://img.shields.io/badge/Java-21-ff6b35.svg)](https://adoptium.net/)
 [![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-f4f1ea.svg)](LICENSE)
 
-JDoor began as a 2022 school networking project co-created by Djenis Ejupi and
-[NobodyToListen](https://github.com/NobodyToListen). Version 1.0.0 is a safety-focused
-modernization by Djenis: the unauthenticated “backdoor” prototype was replaced by an
-explicit remote-support product with a visible host, local approval, encrypted transport,
-bounded messages, and remote control disabled by default.
+JDoor began as a 2022 school networking project built by two student collaborators. Version
+1.0.0 is a safety-focused modernization: the unauthenticated “backdoor” prototype was replaced
+by an explicit remote-support product with a visible host, local approval, encrypted transport,
+bounded messages and remote control disabled by default.
 
 > JDoor Assist is for authorized support only. It deliberately has no unattended access,
 > persistence, remote shell, file transfer, webcam capture, privilege escalation, or stealth mode.
@@ -135,6 +134,5 @@ Further reading:
 ## License and attribution
 
 JDoor remains licensed under [GNU GPL v3](LICENSE). The original school project and its Git
-history are preserved to credit both collaborators. Portfolio material must distinguish that
-shared 2022 work from Djenis Ejupi’s later product, security, UX, testing, and release
-modernization.
+history are preserved to credit both collaborators. Portfolio material distinguishes that shared
+2022 work from the later product, security, UX, testing and release modernization.

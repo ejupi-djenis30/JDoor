@@ -29,7 +29,7 @@ jpackage \
   --type app-image \
   --name "JDoor Assist" \
   --description "Consent-first encrypted remote assistance" \
-  --vendor "Djenis Ejupi and contributors" \
+  --vendor "JDoor contributors" \
   --app-version "$app_version" \
   --dest target/package \
   --input target/jpackage-input \

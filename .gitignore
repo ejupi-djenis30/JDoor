@@ -34,7 +34,5 @@ replay_pid*
 
 # Website tooling and test output
 /website/node_modules/
-/website/.wrangler/
-/website/worker-configuration.d.ts
 /website/playwright-report/
 /website/test-results/

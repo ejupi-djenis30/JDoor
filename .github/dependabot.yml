@@ -35,14 +35,7 @@ updates:
       timezone: Europe/Zurich
     open-pull-requests-limit: 5
     groups:
-      cloudflare-tooling:
-        patterns:
-          - "wrangler"
-          - "@cloudflare/*"
       website-quality:
         patterns:
           - "@playwright/*"
-          - "@types/*"
           - "sharp"
-          - "tsx"
-          - "typescript"

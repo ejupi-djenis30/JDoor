@@ -22,7 +22,8 @@ const [
   launcherWebp,
   launcherAvif,
   approvalWebp,
-  approvalAvif
+  approvalAvif,
+  noJekyll
 ] =
   await Promise.all([
     readFile(resolve(PUBLIC_DIRECTORY, "index.html"), "utf8"),
@@ -38,7 +39,8 @@ const [
     readFile(resolve(PUBLIC_DIRECTORY, "media", "jdoor-launcher.webp")),
     readFile(resolve(PUBLIC_DIRECTORY, "media", "jdoor-launcher.avif")),
     readFile(resolve(PUBLIC_DIRECTORY, "media", "jdoor-local-approval.webp")),
-    readFile(resolve(PUBLIC_DIRECTORY, "media", "jdoor-local-approval.avif"))
+    readFile(resolve(PUBLIC_DIRECTORY, "media", "jdoor-local-approval.avif")),
+    readFile(resolve(PUBLIC_DIRECTORY, ".nojekyll"), "utf8")
   ]);
 
 assert((html.match(/<h1\b/g) ?? []).length === 1, "Homepage must have exactly one h1.");
@@ -60,7 +62,10 @@ assert(html.includes("This website does not start or join remote sessions"), "Ho
 assert(html.includes("128-bit") && html.includes("10 minutes"), "Homepage must preserve pairing-token evidence.");
 assert(html.includes("TLS 1.2/1.3"), "Homepage must preserve the transport claim.");
 assert(html.includes("5 MiB") && html.includes("30 days"), "Homepage must preserve the audit limits.");
-assert(html.includes("NobodyToListen"), "Homepage must preserve original project attribution.");
+assert(
+  html.includes("Two student collaborators"),
+  "Homepage must preserve shared origin without publishing personal collaborator names."
+);
 assert(
   (html.match(/<dt>Instead of<\/dt>/g) ?? []).length === 4 &&
     (html.match(/<dt>Accepted cost<\/dt>/g) ?? []).length === 4,
@@ -95,7 +100,15 @@ assert(
   "JSON-LD has the wrong product name."
 );
 assert(structuredData.softwareVersion === "1.0.0", "JSON-LD must preserve the source version.");
-assert(structuredData.codeRepository === "https://github.com/NobodyToListen/JDoor", "JSON-LD has the wrong source repository.");
+assert(
+  structuredData["@id"] === "https://ejupi-djenis30.github.io/JDoor/#product" &&
+    structuredData.url === "https://ejupi-djenis30.github.io/JDoor/",
+  "JSON-LD has the wrong GitHub Pages identity."
+);
+assert(
+  structuredData.codeRepository === "https://github.com/ejupi-djenis30/JDoor",
+  "JSON-LD has the wrong source repository."
+);
 
 assert(notFound.includes('content="noindex, follow"'), "404 page must be noindex.");
 assert((notFound.match(/<h1\b/g) ?? []).length === 1, "404 page must have exactly one h1.");
@@ -111,9 +124,29 @@ assert(
   "Navigation must trap focus, disable background interaction, lock scrolling and focus destinations."
 );
 assert(!/\bfetch\s*\(/.test(runtime), "Browser runtime must not make network requests.");
-assert(/href="\/styles\.css\?v=\d+"/.test(html), "Homepage stylesheet URL must be revisioned.");
-assert(/src="\/main\.js\?v=\d+"/.test(html), "Homepage runtime URL must be revisioned.");
-assert(/href="\/styles\.css\?v=\d+"/.test(notFound), "404 stylesheet URL must be revisioned.");
+assert(
+  /href="\/JDoor\/styles\.css\?v=\d+"/.test(html),
+  "Homepage stylesheet URL must be revisioned and project-relative."
+);
+assert(
+  /src="\/JDoor\/main\.js\?v=\d+"/.test(html),
+  "Homepage runtime URL must be revisioned and project-relative."
+);
+assert(
+  /href="\/JDoor\/styles\.css\?v=\d+"/.test(notFound),
+  "404 stylesheet URL must be revisioned and project-relative."
+);
+for (const document of [html, notFound]) {
+  for (const [, path] of document.matchAll(/(?:href|src|srcset)="(\/[^"#? ]*)/g)) {
+    assert(path === "/JDoor" || path.startsWith("/JDoor/"), `Root-relative URL escapes /JDoor/: ${path}`);
+  }
+}
+assert(!html.includes("jdoor.ejupilabs.com"), "Homepage must not reference the retired custom domain.");
+assert(
+  html.includes('content="default-src \'self\';') &&
+    notFound.includes('content="default-src \'self\';'),
+  "Published HTML must retain a static-host-compatible content security policy."
+);
 
 assert(favicon.includes('id="door-frame"'), "Favicon must contain the JDoor frame.");
 assert(favicon.includes('id="consent-node"'), "Favicon must contain the consent node.");
@@ -122,17 +155,34 @@ assert(favicon.includes("#FF6B35") && favicon.includes("#45C486"), "Favicon must
 const manifest = JSON.parse(manifestRaw);
 assert(manifest.short_name === "JDoor", "Web manifest has the wrong short name.");
 assert(
+  manifest.start_url === "/JDoor/" && manifest.scope === "/JDoor/",
+  "Web manifest must stay inside the GitHub Pages project path."
+);
+assert(
   manifest.icons.some((icon) => icon.sizes === "192x192") &&
     manifest.icons.some((icon) => icon.sizes === "512x512"),
   "Web manifest must expose 192px and 512px icons."
 );
 
-assert(robots.includes("https://jdoor.ejupilabs.com/sitemap.xml"), "robots.txt has the wrong sitemap.");
-assert(sitemap.includes("<loc>https://jdoor.ejupilabs.com/</loc>"), "Sitemap is missing the canonical homepage.");
-assert(security.includes("https://github.com/NobodyToListen/JDoor/security/advisories/new"), "security.txt must use private reporting.");
-assert(security.includes("Canonical: https://jdoor.ejupilabs.com/.well-known/security.txt"), "security.txt has the wrong canonical URL.");
+assert(
+  robots.includes("https://ejupi-djenis30.github.io/JDoor/sitemap.xml"),
+  "robots.txt has the wrong sitemap."
+);
+assert(
+  sitemap.includes("<loc>https://ejupi-djenis30.github.io/JDoor/</loc>"),
+  "Sitemap is missing the canonical homepage."
+);
+assert(
+  security.includes("https://github.com/ejupi-djenis30/JDoor/security/advisories/new"),
+  "security.txt must use private reporting."
+);
+assert(
+  security.includes("Canonical: https://ejupi-djenis30.github.io/JDoor/.well-known/security.txt"),
+  "security.txt has the wrong canonical URL."
+);
 const expires = security.match(/^Expires:\s*(.+)$/m)?.[1];
 assert(Boolean(expires) && Date.parse(expires) > Date.now(), "security.txt must have a future expiry.");
+assert(noJekyll.trim() === "", ".nojekyll must remain an empty publishing marker.");
 
 assert(preview.subarray(1, 4).toString("ascii") === "PNG", "Social preview must be a PNG.");
 assert(preview.readUInt32BE(16) === 1200 && preview.readUInt32BE(20) === 630, "Social preview must be 1200 × 630.");
@@ -153,4 +203,4 @@ for (const [name, asset] of [
   assert(asset.subarray(4, 12).toString("ascii").includes("ftyp"), `${name} primary asset must be AVIF.`);
 }
 
-console.log("Validated JDoor product narrative, accessibility, metadata, static assets and security disclosures.");
+console.log("Validated JDoor narrative, accessibility, GitHub Pages paths, metadata, assets and disclosures.");

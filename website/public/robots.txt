@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jdoor.ejupilabs.com/sitemap.xml
+Sitemap: https://ejupi-djenis30.github.io/JDoor/sitemap.xml

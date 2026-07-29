@@ -1,21 +1,21 @@
 import { expect, test } from "@playwright/test";
 
 test("homepage presents the consent model without a fake web session", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/JDoor/");
 
   await expect(page.locator("h1")).toContainText("stays in charge");
   await expect(page.locator(".status-label")).toContainText(/source 1\.0\.0/i);
   await expect(page.locator("#flow .flow-step")).toHaveCount(5);
   await expect(page.getByRole("link", { name: /Read the source/i })).toHaveAttribute(
     "href",
-    "https://github.com/NobodyToListen/JDoor"
+    "https://github.com/ejupi-djenis30/JDoor"
   );
   await expect(page.getByRole("button", { name: /start|join|connect/i })).toHaveCount(0);
   await expect(page.locator("form")).toHaveCount(0);
 });
 
 test("the origin and trust boundary are stated without overstating identity checks", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/JDoor/");
 
   await expect(page.locator("#story")).toContainText(/2022[\s\S]*school networking project/i);
   await expect(page.locator("#trust h2")).toContainText(/software checks the endpoint/i);
@@ -23,7 +23,7 @@ test("the origin and trust boundary are stated without overstating identity chec
 });
 
 test("design decisions expose alternatives and accepted costs", async ({ page }) => {
-  await page.goto("/#decisions");
+  await page.goto("/JDoor/#decisions");
 
   await expect(page.locator("#decisions article")).toHaveCount(4);
   await expect(page.locator("#decisions dt", { hasText: "Instead of" })).toHaveCount(4);
@@ -33,7 +33,7 @@ test("design decisions expose alternatives and accepted costs", async ({ page })
 });
 
 test("fit guidance names real situations and when to choose another product", async ({ page }) => {
-  await page.goto("/#boundaries");
+  await page.goto("/JDoor/#boundaries");
 
   await expect(page.locator("#boundaries")).toContainText("Helping family");
   await expect(page.locator("#boundaries")).toContainText("classroom or lab");
@@ -42,7 +42,7 @@ test("fit guidance names real situations and when to choose another product", as
 });
 
 test("authentic product surfaces load with useful context", async ({ page }) => {
-  await page.goto("/#interface");
+  await page.goto("/JDoor/#interface");
 
   const images = page.locator("#interface img");
   await expect(images).toHaveCount(2);
@@ -58,7 +58,7 @@ test("authentic product surfaces load with useful context", async ({ page }) => 
 });
 
 test("source and evidence links have useful accessible names", async ({ page }) => {
-  await page.goto("/#status");
+  await page.goto("/JDoor/#status");
 
   for (const name of ["Architecture", "Threat model", "Privacy", "Security policy"]) {
     await expect(page.getByRole("link", { name: new RegExp(`${name}.*opens in a new tab`, "i") })).toHaveCount(1);
@@ -67,7 +67,7 @@ test("source and evidence links have useful accessible names", async ({ page }) 
 
 test("mobile navigation opens, focuses its first item and closes with Escape", async ({ page, isMobile }) => {
   test.skip(!isMobile, "Mobile navigation contract");
-  await page.goto("/");
+  await page.goto("/JDoor/");
 
   const toggle = page.locator("[data-menu-toggle]");
   const navigation = page.locator("[data-site-nav]");
@@ -96,7 +96,7 @@ test("mobile navigation opens, focuses its first item and closes with Escape", a
 test("desktop navigation state resets at the same breakpoint used by the layout", async ({ page, isMobile }) => {
   test.skip(isMobile, "Resizable desktop context");
   await page.setViewportSize({ width: 1000, height: 800 });
-  await page.goto("/");
+  await page.goto("/JDoor/");
 
   const toggle = page.locator("[data-menu-toggle]");
   const navigation = page.locator("[data-site-nav]");
@@ -110,7 +110,7 @@ test("desktop navigation state resets at the same breakpoint used by the layout"
 });
 
 test("section navigation transfers focus to the destination heading", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/JDoor/");
 
   const link = page.locator('[data-site-nav] a[href="#decisions"]');
   if (await page.locator("[data-menu-toggle]").isVisible()) {
@@ -124,7 +124,7 @@ test("section navigation transfers focus to the destination heading", async ({ p
 test("the complete hero fits a common laptop viewport", async ({ page, isMobile }) => {
   test.skip(isMobile, "Desktop composition");
   await page.setViewportSize({ width: 1280, height: 720 });
-  await page.goto("/");
+  await page.goto("/JDoor/");
 
   const bounds = await page.locator(".hero").evaluate(() => {
     const actions = document.querySelector(".hero__actions")?.getBoundingClientRect();
@@ -141,7 +141,7 @@ test("the complete hero fits a common laptop viewport", async ({ page, isMobile 
 test("all key viewport widths avoid horizontal overflow", async ({ page }) => {
   for (const width of [320, 390, 768, 1280, 1920]) {
     await page.setViewportSize({ width, height: width < 800 ? 860 : 1000 });
-    await page.goto("/");
+    await page.goto("/JDoor/");
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth
     );
@@ -150,7 +150,7 @@ test("all key viewport widths avoid horizontal overflow", async ({ page }) => {
 });
 
 test("custom missing routes return a true, noindex 404 page", async ({ page }) => {
-  const response = await page.goto("/not-a-real-route");
+  const response = await page.goto("/JDoor/not-a-real-route");
   expect(response?.status()).toBe(404);
   await expect(page.locator("h1")).toContainText("Nothing is listening here");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, follow");
@@ -159,7 +159,7 @@ test("custom missing routes return a true, noindex 404 page", async ({ page }) =
 test("reduced motion keeps every section immediately readable", async ({ browser }) => {
   const context = await browser.newContext({ reducedMotion: "reduce" });
   const page = await context.newPage();
-  await page.goto("/");
+  await page.goto("/JDoor/");
   await expect(page.locator("main")).toBeVisible();
   await expect(page.locator("#status")).toBeVisible();
   await context.close();

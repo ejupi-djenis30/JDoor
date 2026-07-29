@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#F4F1EA" />
     <meta name="color-scheme" content="light" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'none'; connect-src 'none'; form-action 'none'; frame-src 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self'; upgrade-insecure-requests"
+    />
     <meta
       name="description"
       content="JDoor is open-source remote assistance for trusted local networks. Pairing is short-lived, approval happens on the shared computer and every session starts view-only."
     />
-    <meta name="author" content="Djenis Ejupi and contributors" />
+    <meta name="author" content="JDoor contributors" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://jdoor.ejupilabs.com/" />
+    <link rel="canonical" href="https://ejupi-djenis30.github.io/JDoor/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="JDoor" />
@@ -20,8 +25,11 @@
       property="og:description"
       content="Open-source remote assistance with a short-lived invitation, local approval and a view-only start."
     />
-    <meta property="og:url" content="https://jdoor.ejupilabs.com/" />
-    <meta property="og:image" content="https://jdoor.ejupilabs.com/social/jdoor-preview.png?v=3" />
+    <meta property="og:url" content="https://ejupi-djenis30.github.io/JDoor/" />
+    <meta
+      property="og:image"
+      content="https://ejupi-djenis30.github.io/JDoor/social/jdoor-preview.png?v=3"
+    />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -35,7 +43,10 @@
       name="twitter:description"
       content="The person sharing the screen approves locally and keeps control of the session."
     />
-    <meta name="twitter:image" content="https://jdoor.ejupilabs.com/social/jdoor-preview.png?v=3" />
+    <meta
+      name="twitter:image"
+      content="https://ejupi-djenis30.github.io/JDoor/social/jdoor-preview.png?v=3"
+    />
     <meta
       name="twitter:image:alt"
       content="JDoor identity and a local-approval session boundary."
@@ -45,26 +56,20 @@
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "@id": "https://jdoor.ejupilabs.com/#product",
+        "@id": "https://ejupi-djenis30.github.io/JDoor/#product",
         "name": "JDoor",
         "alternateName": "JDoor Assist",
-        "url": "https://jdoor.ejupilabs.com/",
+        "url": "https://ejupi-djenis30.github.io/JDoor/",
         "description": "Open-source remote assistance for trusted local networks, with short-lived pairing, local approval and a view-only start.",
         "applicationCategory": "RemoteDesktopApplication",
         "applicationSubCategory": "Authorized remote assistance",
         "softwareVersion": "1.0.0",
         "isAccessibleForFree": true,
         "license": "https://www.gnu.org/licenses/gpl-3.0.html",
-        "codeRepository": "https://github.com/NobodyToListen/JDoor",
+        "codeRepository": "https://github.com/ejupi-djenis30/JDoor",
         "author": {
-          "@type": "Person",
-          "name": "Djenis Ejupi",
-          "url": "https://djenis.ejupilabs.com/"
-        },
-        "contributor": {
-          "@type": "Person",
-          "name": "NobodyToListen",
-          "url": "https://github.com/NobodyToListen"
+          "@type": "Organization",
+          "name": "JDoor contributors"
         },
         "featureList": [
           "TLS 1.2 and 1.3 transport",
@@ -78,11 +83,11 @@
     </script>
 
     <title>JDoor — Remote assistance with local approval</title>
-    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/icons/jdoor-180.png?v=1" sizes="180x180" />
-    <link rel="manifest" href="/site.webmanifest?v=3" />
-    <link rel="stylesheet" href="/styles.css?v=4" />
-    <script src="/main.js?v=4" defer></script>
+    <link rel="icon" href="/JDoor/favicon.svg?v=2" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/JDoor/icons/jdoor-180.png?v=1" sizes="180x180" />
+    <link rel="manifest" href="/JDoor/site.webmanifest?v=3" />
+    <link rel="stylesheet" href="/JDoor/styles.css?v=4" />
+    <script src="/JDoor/main.js?v=4" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -90,7 +95,7 @@
     <header class="site-header" data-header>
       <div class="site-header__inner shell">
         <a class="brand" href="#top" aria-label="JDoor home">
-          <img src="/favicon.svg?v=2" width="40" height="40" alt="" />
+          <img src="/JDoor/favicon.svg?v=2" width="40" height="40" alt="" />
           <span class="brand__name">JDoor</span>
           <span class="brand__descriptor">Remote assistance</span>
         </a>
@@ -110,7 +115,7 @@
 
         <a
           class="header-source"
-          href="https://github.com/NobodyToListen/JDoor"
+          href="https://github.com/ejupi-djenis30/JDoor"
           target="_blank"
           rel="noreferrer"
         >
@@ -155,7 +160,7 @@
               </a>
               <a
                 class="text-link"
-                href="https://github.com/NobodyToListen/JDoor"
+                href="https://github.com/ejupi-djenis30/JDoor"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -222,9 +227,9 @@
         <div class="interface-proof__stage shell">
           <figure class="interface-shot interface-shot--launcher">
             <picture>
-              <source srcset="/media/jdoor-launcher.avif" type="image/avif" />
+              <source srcset="/JDoor/media/jdoor-launcher.avif" type="image/avif" />
               <img
-                src="/media/jdoor-launcher.webp"
+                src="/JDoor/media/jdoor-launcher.webp"
                 width="909"
                 height="615"
                 loading="lazy"
@@ -239,9 +244,9 @@
 
           <figure class="interface-shot interface-shot--approval">
             <picture>
-              <source srcset="/media/jdoor-local-approval.avif" type="image/avif" />
+              <source srcset="/JDoor/media/jdoor-local-approval.avif" type="image/avif" />
               <img
-                src="/media/jdoor-local-approval.webp"
+                src="/JDoor/media/jdoor-local-approval.webp"
                 width="692"
                 height="251"
                 loading="lazy"
@@ -350,10 +355,10 @@
               It began by connecting two computers. The rebuild changed the question.
             </h2>
             <p class="story__lead">
-              JDoor was co-created by Djenis Ejupi and NobodyToListen as a school experiment in
-              networking and remote control. The first version proved the connection could work.
-              Years later, Djenis rebuilt it around a narrower and more useful premise: the person
-              sharing the machine should remain visibly present in every decision.
+              Two student collaborators created JDoor as a school experiment in networking and
+              remote control. The first version proved the connection could work. Years later, one
+              maintainer rebuilt it around a narrower and more useful premise: the person sharing
+              the machine should remain visibly present in every decision.
             </p>
             <dl class="story__before-after">
               <div>
@@ -634,7 +639,7 @@
               <div class="status__actions">
                 <a
                   class="button button--action"
-                  href="https://github.com/NobodyToListen/JDoor"
+                  href="https://github.com/ejupi-djenis30/JDoor"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -643,7 +648,7 @@
                 </a>
                 <a
                   class="text-link text-link--light"
-                  href="https://github.com/NobodyToListen/JDoor/blob/main/docs/DEVELOPMENT.md"
+                  href="https://github.com/ejupi-djenis30/JDoor/blob/main/docs/DEVELOPMENT.md"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -662,28 +667,28 @@
 
           <nav class="documentation-links" aria-label="Technical documentation">
             <a
-              href="https://github.com/NobodyToListen/JDoor/blob/main/docs/ARCHITECTURE.md"
+              href="https://github.com/ejupi-djenis30/JDoor/blob/main/docs/ARCHITECTURE.md"
               target="_blank"
               rel="noreferrer"
             >
               <span>01</span><strong>Architecture</strong><em>opens in a new tab</em><i aria-hidden="true">↗</i>
             </a>
             <a
-              href="https://github.com/NobodyToListen/JDoor/blob/main/docs/THREAT_MODEL.md"
+              href="https://github.com/ejupi-djenis30/JDoor/blob/main/docs/THREAT_MODEL.md"
               target="_blank"
               rel="noreferrer"
             >
               <span>02</span><strong>Threat model</strong><em>opens in a new tab</em><i aria-hidden="true">↗</i>
             </a>
             <a
-              href="https://github.com/NobodyToListen/JDoor/blob/main/docs/PRIVACY.md"
+              href="https://github.com/ejupi-djenis30/JDoor/blob/main/docs/PRIVACY.md"
               target="_blank"
               rel="noreferrer"
             >
               <span>03</span><strong>Privacy</strong><em>opens in a new tab</em><i aria-hidden="true">↗</i>
             </a>
             <a
-              href="https://github.com/NobodyToListen/JDoor/security/policy"
+              href="https://github.com/ejupi-djenis30/JDoor/security/policy"
               target="_blank"
               rel="noreferrer"
             >
@@ -698,22 +703,20 @@
       <div class="site-footer__inner shell">
         <div class="site-footer__brand">
           <a class="brand brand--footer" href="#top" aria-label="Back to top">
-            <img src="/favicon.svg?v=2" width="52" height="52" alt="" />
+            <img src="/JDoor/favicon.svg?v=2" width="52" height="52" alt="" />
             <span class="brand__name">JDoor</span>
           </a>
           <p>Open-source remote assistance for trusted local networks.</p>
         </div>
         <div class="site-footer__meta">
           <p>
-            Originally co-created in 2022 by Djenis Ejupi and
-            <a href="https://github.com/NobodyToListen" target="_blank" rel="noreferrer">
-              NobodyToListen<span class="sr-only">; opens in a new tab</span>
-            </a>; later product, security, UX, testing and release modernization led by Djenis.
+            Created in 2022 by two student collaborators; later product, security, UX, testing and
+            release modernization were led by one maintainer.
           </p>
           <p>
             GPL-3.0 · <a href="https://ejupilabs.com/">Ejupi Labs</a> ·
             <a href="https://blog.ejupilabs.com/case-studies/jdoor-security-lab/">Case study</a> ·
-            <a href="https://github.com/NobodyToListen/JDoor">Source on GitHub</a> ·
+            <a href="https://github.com/ejupi-djenis30/JDoor">Source on GitHub</a> ·
             <a href="#top">Back to top ↑</a>
           </p>
         </div>

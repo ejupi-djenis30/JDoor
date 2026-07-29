@@ -3,6 +3,7 @@ import { readFile, stat } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
 
 const PUBLIC_DIRECTORY = resolve(import.meta.dirname, "..", "public");
+const SITE_PATH = "/JDoor";
 const portArgument = process.argv.indexOf("--port");
 const PORT = portArgument >= 0 ? Number(process.argv[portArgument + 1]) : 4175;
 const MIME_TYPES = new Map([
@@ -20,7 +21,12 @@ const MIME_TYPES = new Map([
 ]);
 
 function safePath(pathname) {
-  const relative = pathname === "/" ? "index.html" : decodeURIComponent(pathname).replace(/^\/+/, "");
+  const decoded = decodeURIComponent(pathname);
+  if (decoded !== SITE_PATH && decoded !== `${SITE_PATH}/` && !decoded.startsWith(`${SITE_PATH}/`)) {
+    return null;
+  }
+  const mountedPath = decoded.slice(SITE_PATH.length);
+  const relative = mountedPath === "" || mountedPath === "/" ? "index.html" : mountedPath.replace(/^\/+/, "");
   const candidate = resolve(PUBLIC_DIRECTORY, relative);
   return candidate === PUBLIC_DIRECTORY || candidate.startsWith(`${PUBLIC_DIRECTORY}${sep}`)
     ? candidate
@@ -28,15 +34,21 @@ function safePath(pathname) {
 }
 
 async function responseFor(pathname) {
+  if (pathname === "/") {
+    return { status: 308, path: null, location: `${SITE_PATH}/` };
+  }
+
   const candidate = safePath(pathname);
-  if (!candidate) return { status: 400, path: null };
+  if (!candidate) {
+    return { status: 404, path: resolve(PUBLIC_DIRECTORY, "404.html"), location: null };
+  }
 
   try {
     const file = (await stat(candidate)).isDirectory() ? resolve(candidate, "index.html") : candidate;
     await stat(file);
-    return { status: 200, path: file };
+    return { status: 200, path: file, location: null };
   } catch {
-    return { status: 404, path: resolve(PUBLIC_DIRECTORY, "404.html") };
+    return { status: 404, path: resolve(PUBLIC_DIRECTORY, "404.html"), location: null };
   }
 }
 
@@ -44,6 +56,11 @@ const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url ?? "/", `http://${request.headers.host ?? "127.0.0.1"}`);
     const result = await responseFor(url.pathname);
+    if (result.location) {
+      response.writeHead(result.status, { Location: result.location });
+      response.end();
+      return;
+    }
     if (!result.path) {
       response.writeHead(result.status, { "Content-Type": "text/plain; charset=utf-8" });
       response.end("Bad request");
@@ -64,5 +81,5 @@ const server = createServer(async (request, response) => {
 });
 
 server.listen(PORT, "127.0.0.1", () => {
-  console.log(`JDoor website preview listening on http://127.0.0.1:${PORT}`);
+  console.log(`JDoor website preview listening on http://127.0.0.1:${PORT}${SITE_PATH}/`);
 });

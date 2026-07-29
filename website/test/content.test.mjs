@@ -2,14 +2,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const [html, styles, runtime, assetGenerator, wrangler, worker, handler] = await Promise.all([
+const [html, styles, runtime, assetGenerator, pagesWorkflow] = await Promise.all([
   readFile(new URL("../public/index.html", import.meta.url), "utf8"),
   readFile(new URL("../public/styles.css", import.meta.url), "utf8"),
   readFile(new URL("../public/main.js", import.meta.url), "utf8"),
   readFile(new URL("../scripts/generate-assets.mjs", import.meta.url), "utf8"),
-  readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"),
-  readFile(new URL("../worker/index.ts", import.meta.url), "utf8"),
-  readFile(new URL("../worker/handler.ts", import.meta.url), "utf8")
+  readFile(new URL("../../.github/workflows/pages.yml", import.meta.url), "utf8")
 ]);
 
 test("the product narrative leads with evidence and keeps permission ahead of origin", () => {
@@ -27,7 +25,7 @@ test("the product narrative leads with evidence and keeps permission ahead of or
   assert(storyIndex < decisionsIndex);
   assert(decisionsIndex < trustIndex);
   assert(flowIndex < boundaryIndex);
-  assert.match(html, /co-created by Djenis Ejupi and NobodyToListen as a school experiment/iu);
+  assert.match(html, /Two student collaborators created JDoor as a school experiment/iu);
   assert.match(html, /view-only sessions by default/iu);
   assert.match(html, /host enables it for that session/iu);
   assert.match(html, /revoke/iu);
@@ -97,29 +95,21 @@ test("security and privacy claims stay within repository evidence", () => {
   assert.match(html, /software checks the endpoint.*host decides the person/isu);
 });
 
-test("Cloudflare serves every asset through the security-header Worker", () => {
-  const config = JSON.parse(wrangler);
-  assert.equal(config.compatibility_date, "2026-07-27");
-  assert.equal(config.workers_dev, false);
-  assert.equal(config.preview_urls, false);
-  assert.deepEqual(config.routes, [{ pattern: "jdoor.ejupilabs.com", custom_domain: true }]);
-  assert.equal(config.assets.binding, "ASSETS");
-  assert.equal(config.assets.not_found_handling, "404-page");
-  assert.equal(config.assets.html_handling, "auto-trailing-slash");
-  assert.equal(config.assets.run_worker_first, true);
-  assert.match(worker, /satisfies ExportedHandler<Env>/);
-  assert.match(handler, /env\.ASSETS\.fetch\(request\)/);
-  assert.match(handler, /Content-Security-Policy/);
-  assert.match(handler, /Strict-Transport-Security/);
-  assert.doesNotMatch(
-    handler,
-    /^const\s+[A-Z][A-Z0-9_]*\s*=\s*new\s+Response\b/m,
-    "Response instances must be created inside request handlers, not at module scope."
+test("GitHub Pages publishes only the reviewed static directory with least privilege", () => {
+  assert.match(pagesWorkflow, /^permissions:\s*\{\}/m);
+  assert.match(
+    pagesWorkflow,
+    /build:[\s\S]*?permissions:\s*\n\s+contents: read\s*\n\s+pages: read/
   );
-  assert.doesNotMatch(
-    `${worker}\n${handler}`,
-    /passThroughOnException|Math\.random|cloudflare\.com\/client\/v4/
+  assert.match(
+    pagesWorkflow,
+    /deploy:[\s\S]*?permissions:\s*\n\s+pages: write\s*\n\s+id-token: write/
   );
+  assert.match(pagesWorkflow, /path: website\/public/);
+  assert.match(pagesWorkflow, /actions\/configure-pages@[0-9a-f]{40}/);
+  assert.match(pagesWorkflow, /actions\/upload-pages-artifact@[0-9a-f]{40}/);
+  assert.match(pagesWorkflow, /actions\/deploy-pages@[0-9a-f]{40}/);
+  assert.doesNotMatch(pagesWorkflow, /wrangler|cloudflare/iu);
 });
 
 test("layout contracts preserve readable type and touch targets", () => {
@@ -136,7 +126,7 @@ test("mobile navigation locks background interaction and traps keyboard focus", 
 });
 
 test("mutable shell assets use revisioned URLs", () => {
-  assert.match(html, /href="\/styles\.css\?v=\d+"/);
-  assert.match(html, /src="\/main\.js\?v=\d+"/);
-  assert.match(html, /href="\/site\.webmanifest\?v=\d+"/);
+  assert.match(html, /href="\/JDoor\/styles\.css\?v=\d+"/);
+  assert.match(html, /src="\/JDoor\/main\.js\?v=\d+"/);
+  assert.match(html, /href="\/JDoor\/site\.webmanifest\?v=\d+"/);
 });

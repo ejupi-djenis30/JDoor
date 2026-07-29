@@ -13,7 +13,7 @@ export default defineConfig({
   },
   webServer: {
     command: "npm run preview -- --port 4175",
-    url: "http://127.0.0.1:4175",
+    url: "http://127.0.0.1:4175/JDoor/",
     reuseExistingServer: !process.env.CI,
     timeout: 120000
   },
