@@ -55,6 +55,7 @@ jobs:
         with:
           path: website/public
           retention-days: 1
+          include-hidden-files: true
 
   deploy:
     name: Publish

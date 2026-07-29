@@ -106,6 +106,7 @@ test("GitHub Pages publishes only the reviewed static directory with least privi
     /deploy:[\s\S]*?permissions:\s*\n\s+pages: write\s*\n\s+id-token: write/
   );
   assert.match(pagesWorkflow, /path: website\/public/);
+  assert.match(pagesWorkflow, /include-hidden-files: true/);
   assert.match(pagesWorkflow, /actions\/configure-pages@[0-9a-f]{40}/);
   assert.match(pagesWorkflow, /actions\/upload-pages-artifact@[0-9a-f]{40}/);
   assert.match(pagesWorkflow, /actions\/deploy-pages@[0-9a-f]{40}/);
