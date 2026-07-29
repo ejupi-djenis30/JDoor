@@ -3,6 +3,14 @@ import { resolve } from "node:path";
 
 const PROJECT_DIRECTORY = resolve(import.meta.dirname, "..");
 const PUBLIC_DIRECTORY = resolve(PROJECT_DIRECTORY, "public");
+const SITE_URL = "https://ejupi-djenis30.github.io/JDoor/";
+const EXPECTED_ROBOTS = [
+  "User-agent: *",
+  "Allow: /JDoor/",
+  "",
+  `Sitemap: ${SITE_URL}sitemap.xml`,
+  ""
+].join("\n");
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -165,21 +173,27 @@ assert(
 );
 
 assert(
-  robots.includes("https://ejupi-djenis30.github.io/JDoor/sitemap.xml"),
-  "robots.txt has the wrong sitemap."
+  robots.replaceAll("\r\n", "\n") === EXPECTED_ROBOTS,
+  "robots.txt must allow only /JDoor/ and advertise the canonical project sitemap."
 );
+const sitemapLocations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, location]) => location);
 assert(
-  sitemap.includes("<loc>https://ejupi-djenis30.github.io/JDoor/</loc>"),
-  "Sitemap is missing the canonical homepage."
+  sitemapLocations.length === 1 && sitemapLocations[0] === SITE_URL,
+  "Sitemap must expose exactly the canonical /JDoor/ homepage."
 );
 assert(
   security.includes("https://github.com/ejupi-djenis30/JDoor/security/advisories/new"),
   "security.txt must use private reporting."
 );
 assert(
-  security.includes("Canonical: https://ejupi-djenis30.github.io/JDoor/.well-known/security.txt"),
+  security.includes(`Canonical: ${SITE_URL}.well-known/security.txt`),
   "security.txt has the wrong canonical URL."
 );
+assert(
+  security.includes("Policy: https://github.com/ejupi-djenis30/JDoor/security/policy"),
+  "security.txt has the wrong security policy."
+);
+assert(!/mailto:|@[A-Za-z0-9.-]+/i.test(security), "security.txt must not publish an email address.");
 const expires = security.match(/^Expires:\s*(.+)$/m)?.[1];
 assert(Boolean(expires) && Date.parse(expires) > Date.now(), "security.txt must have a future expiry.");
 assert(noJekyll.trim() === "", ".nojekyll must remain an empty publishing marker.");

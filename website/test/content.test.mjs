@@ -2,12 +2,26 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const [html, styles, runtime, assetGenerator, pagesWorkflow] = await Promise.all([
+const [
+  html,
+  styles,
+  runtime,
+  assetGenerator,
+  pagesWorkflow,
+  robots,
+  sitemap,
+  security,
+  noJekyll
+] = await Promise.all([
   readFile(new URL("../public/index.html", import.meta.url), "utf8"),
   readFile(new URL("../public/styles.css", import.meta.url), "utf8"),
   readFile(new URL("../public/main.js", import.meta.url), "utf8"),
   readFile(new URL("../scripts/generate-assets.mjs", import.meta.url), "utf8"),
-  readFile(new URL("../../.github/workflows/pages.yml", import.meta.url), "utf8")
+  readFile(new URL("../../.github/workflows/pages.yml", import.meta.url), "utf8"),
+  readFile(new URL("../public/robots.txt", import.meta.url), "utf8"),
+  readFile(new URL("../public/sitemap.xml", import.meta.url), "utf8"),
+  readFile(new URL("../public/.well-known/security.txt", import.meta.url), "utf8"),
+  readFile(new URL("../public/.nojekyll", import.meta.url), "utf8")
 ]);
 
 test("the product narrative leads with evidence and keeps permission ahead of origin", () => {
@@ -105,12 +119,45 @@ test("GitHub Pages publishes only the reviewed static directory with least privi
     pagesWorkflow,
     /deploy:[\s\S]*?permissions:\s*\n\s+pages: write\s*\n\s+id-token: write/
   );
-  assert.match(pagesWorkflow, /path: website\/public/);
-  assert.match(pagesWorkflow, /include-hidden-files: true/);
+  assert.match(
+    pagesWorkflow,
+    /uses: actions\/upload-pages-artifact@[0-9a-f]{40}[\s\S]*?with:\s*\n\s+path: website\/public\s*\n\s+retention-days: 1\s*\n\s+include-hidden-files: true/
+  );
   assert.match(pagesWorkflow, /actions\/configure-pages@[0-9a-f]{40}/);
   assert.match(pagesWorkflow, /actions\/upload-pages-artifact@[0-9a-f]{40}/);
   assert.match(pagesWorkflow, /actions\/deploy-pages@[0-9a-f]{40}/);
   assert.doesNotMatch(pagesWorkflow, /wrangler|cloudflare/iu);
+});
+
+test("GitHub Pages discovery and security files remain project-scoped", () => {
+  assert.equal(
+    robots.replaceAll("\r\n", "\n"),
+    [
+      "User-agent: *",
+      "Allow: /JDoor/",
+      "",
+      "Sitemap: https://ejupi-djenis30.github.io/JDoor/sitemap.xml",
+      ""
+    ].join("\n")
+  );
+  assert.deepEqual(
+    [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, location]) => location),
+    ["https://ejupi-djenis30.github.io/JDoor/"]
+  );
+  assert.match(
+    security,
+    /^Contact: https:\/\/github\.com\/ejupi-djenis30\/JDoor\/security\/advisories\/new$/mu
+  );
+  assert.match(
+    security,
+    /^Canonical: https:\/\/ejupi-djenis30\.github\.io\/JDoor\/\.well-known\/security\.txt$/mu
+  );
+  assert.match(
+    security,
+    /^Policy: https:\/\/github\.com\/ejupi-djenis30\/JDoor\/security\/policy$/mu
+  );
+  assert.doesNotMatch(security, /mailto:|@[A-Za-z0-9.-]+/iu);
+  assert.equal(noJekyll.trim(), "");
 });
 
 test("layout contracts preserve readable type and touch targets", () => {
