@@ -1,4 +1,4 @@
 User-agent: *
-Allow: /
+Allow: /JDoor/
 
 Sitemap: https://ejupi-djenis30.github.io/JDoor/sitemap.xml

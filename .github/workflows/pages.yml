@@ -43,7 +43,7 @@ jobs:
         working-directory: website
         run: npx playwright install --with-deps chromium
 
-      - name: Verify website
+      - name: Verify website and Pages publishing contract
         working-directory: website
         run: npm run check
 
