@@ -7,6 +7,7 @@ const FAVICON_PATH = resolve(PROJECT_DIRECTORY, "public", "favicon.svg");
 const SOCIAL_PATH = resolve(PROJECT_DIRECTORY, "public", "social", "jdoor-preview.png");
 const MANIFEST_PATH = resolve(PROJECT_DIRECTORY, "public", "social", "manifest.json");
 const CHECK_ONLY = process.argv.includes("--check");
+const SOCIAL_SITE_LABEL = "EJUPI-DJENIS30.GITHUB.IO/JDOOR";
 const ICONS = Object.freeze([
   { name: "jdoor-180.png", size: 180 },
   { name: "jdoor-192.png", size: 192 },
@@ -58,7 +59,7 @@ function createSocialSource(favicon) {
 
   <line x1="72" y1="500" x2="690" y2="500" stroke="#0D100F" stroke-opacity=".25"/>
   <text x="72" y="536" class="mono" font-size="11" letter-spacing="1.1" fill="#626761">TRUSTED LAN / TLS 1.2–1.3 / OPEN SOURCE</text>
-  <text x="690" y="536" class="mono" font-size="11" text-anchor="end" letter-spacing="1.1" fill="#626761">JDOOR.EJUPILABS.COM</text>
+  <text x="690" y="536" class="mono" font-size="11" text-anchor="end" letter-spacing="1.1" fill="#626761">${SOCIAL_SITE_LABEL}</text>
 
   <rect x="754" y="68" width="372" height="486" fill="#FFFDF8" stroke="#0D100F"/>
   <text x="780" y="100" class="mono" font-size="10" letter-spacing="1.15" fill="#626761">ONE REMOTE-SUPPORT SESSION</text>
