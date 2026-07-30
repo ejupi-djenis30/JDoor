@@ -1556,6 +1556,19 @@ code {
   text-transform: uppercase;
 }
 
+.site-footer__meta p:last-child {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 0.35rem;
+}
+
+.site-footer__meta p:last-child a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
 /* 404 */
 
 .error-page {
