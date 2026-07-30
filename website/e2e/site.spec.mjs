@@ -65,6 +65,22 @@ test("source and evidence links have useful accessible names", async ({ page }) 
   }
 });
 
+test("mobile footer links remain large enough to tap", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "Mobile footer contract");
+  await page.goto("/JDoor/");
+
+  const undersized = await page.locator(".site-footer__meta p:last-child a").evaluateAll((links) =>
+    links
+      .map((link) => {
+        const rect = link.getBoundingClientRect();
+        return { height: rect.height, label: link.textContent.trim(), width: rect.width };
+      })
+      .filter(({ height, width }) => height < 44 || width < 44),
+  );
+
+  expect(undersized).toEqual([]);
+});
+
 test("mobile navigation opens, focuses its first item and closes with Escape", async ({ page, isMobile }) => {
   test.skip(!isMobile, "Mobile navigation contract");
   await page.goto("/JDoor/");
