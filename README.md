@@ -106,7 +106,9 @@ Create an unsigned platform app image with JDK `jpackage`:
 
 Outputs are written below `target/package/`. Community builds are currently unsigned; your OS
 may show an unverified-publisher warning. Release automation also emits checksums, an SBOM, and
-GitHub build provenance.
+GitHub build provenance. Maintainers should follow the
+[release procedure](docs/RELEASES.md); a successful packaging run alone does not authorize a
+publication.
 
 ## Repository map
 
@@ -128,6 +130,7 @@ Further reading:
 - [Threat model](docs/THREAT_MODEL.md)
 - [Privacy](docs/PRIVACY.md)
 - [Development guide](docs/DEVELOPMENT.md)
+- [Release procedure](docs/RELEASES.md)
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
 

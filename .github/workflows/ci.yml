@@ -77,6 +77,11 @@ jobs:
         working-directory: website
         run: npm ci
 
+      - name: Verify release metadata and publication guardrails
+        run: |
+          node --test scripts/check-release-contract.test.mjs
+          node scripts/check-release-contract.mjs --expected-tag v1.0.0
+
       - name: Install Chromium
         working-directory: website
         run: npx playwright install --with-deps chromium
