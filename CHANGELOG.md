@@ -5,6 +5,11 @@ Semantic Versioning.
 
 ## [Unreleased]
 
+### Fixed
+
+- Reject impossible message-specific payload lengths before reading or allocating a body, including authentication and heartbeat frames.
+- Require canonical boolean encoding for permission messages; valid version 1 peers remain compatible.
+
 ### Planned
 
 - Signed installers when platform signing identities are available.

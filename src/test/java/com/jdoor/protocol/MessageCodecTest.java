@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class MessageCodecTest {
@@ -92,6 +93,37 @@ class MessageCodecTest {
         assertArrayEquals(new byte[] {1, 2, 3}, frame.jpeg());
     }
 
+    @ParameterizedTest
+    @CsvSource({
+        "1, 7", "1, 8201", "2, 24", "2, 26", "3, 3", "3, 4101",
+        "4, 28", "4, 6291485", "5, 9", "5, 11", "6, 8", "6, 10",
+        "7, 0", "7, 2", "8, 7", "8, 9", "9, 7", "9, 9",
+        "10, 3", "10, 4101", "11, 1"
+    })
+    void rejectsImpossibleTypeLengthsBeforeReadingPayload(int type, int declaredLength) throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        try (DataOutputStream output = new DataOutputStream(bytes)) {
+            output.writeInt(MessageCodec.MAGIC);
+            output.writeShort(MessageCodec.VERSION);
+            output.writeByte(type);
+            output.writeInt(declaredLength);
+        }
+        // No body is supplied: trying to consume it would produce EOFException.
+        assertThrows(ProtocolException.class, () -> codec.read(input(bytes.toByteArray())));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"2", "127", "255"})
+    void rejectsNonCanonicalPermissionBooleans(int value) throws IOException {
+        byte[] control = encode(new WireMessage.ControlState(false));
+        control[control.length - 1] = (byte) value;
+        assertThrows(ProtocolException.class, () -> codec.read(input(control)));
+
+        byte[] hello = encode(new WireMessage.ServerHello(UUID.randomUUID(), 32, 24, false));
+        hello[hello.length - 1] = (byte) value;
+        assertThrows(ProtocolException.class, () -> codec.read(input(hello)));
+    }
+
     private WireMessage roundTrip(WireMessage message) throws IOException {
         return codec.read(input(encode(message)));
     }
@@ -123,6 +155,7 @@ class MessageCodecTest {
         return Stream.of(
                 new WireMessage.ClientHello(token, "Support laptop"),
                 new WireMessage.ServerHello(UUID.randomUUID(), 1920, 1080, false),
+                new WireMessage.ServerHello(UUID.randomUUID(), 1920, 1080, true),
                 new WireMessage.Rejected("Not approved"),
                 new WireMessage.ScreenFrame(5, 1_700_000_000_000L, 640, 480, new byte[] {1, 2, 3}),
                 new WireMessage.PointerInput(WireMessage.PointerAction.MOVE, 0.25f, 0.75f, 0),
@@ -130,6 +163,7 @@ class MessageCodecTest {
                 new WireMessage.KeyboardInput(WireMessage.KeyAction.PRESS, 65, 2),
                 new WireMessage.ReleaseAllInputs(),
                 new WireMessage.ControlState(true),
+                new WireMessage.ControlState(false),
                 new WireMessage.Ping(11),
                 new WireMessage.Pong(12),
                 new WireMessage.Goodbye("Done"));
