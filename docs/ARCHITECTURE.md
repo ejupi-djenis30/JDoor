@@ -55,6 +55,13 @@ Protocol version 1 intentionally supports screen frames, pointer/key input, perm
 heartbeat, rejection, and graceful disconnect only. Adding file transfer, clipboard sync, or
 other capabilities requires a separate threat-model update.
 
+Payload lengths are checked against the selected message type before reading or allocating
+the body. Fixed-size messages require their exact length; text and image messages have separate
+ceilings, so a heartbeat or authentication message cannot consume the image allocation budget.
+Permission booleans accept only the canonical wire values `0` and `1`. These stricter checks keep
+protocol version 1: every frame produced by the existing version 1 encoder remains compatible;
+only malformed frames are newly rejected.
+
 ## Concurrency
 
 - One daemon thread accepts sockets.

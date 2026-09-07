@@ -54,6 +54,9 @@ public final class MessageCodec {
         if (length < 0 || length > MAX_PAYLOAD_BYTES) {
             throw new ProtocolException("Payload length is outside the allowed range");
         }
+        if (length < type.minimumBytes || length > type.maximumBytes) {
+            throw new ProtocolException("Payload length is invalid for " + type);
+        }
         byte[] bytes = input.readNBytes(length);
         if (bytes.length != length) {
             throw new EOFException("Connection closed inside a protocol frame");
@@ -139,7 +142,7 @@ public final class MessageCodec {
                         new UUID(input.readLong(), input.readLong()),
                         input.readInt(),
                         input.readInt(),
-                        input.readBoolean());
+                        readBoolean(input));
             case REJECTED -> new WireMessage.Rejected(readString(input));
             case SCREEN_FRAME -> {
                 long sequence = input.readLong();
@@ -165,11 +168,19 @@ public final class MessageCodec {
                         input.readInt(),
                         input.readInt());
             case RELEASE_ALL_INPUTS -> new WireMessage.ReleaseAllInputs();
-            case CONTROL_STATE -> new WireMessage.ControlState(input.readBoolean());
+            case CONTROL_STATE -> new WireMessage.ControlState(readBoolean(input));
             case PING -> new WireMessage.Ping(input.readLong());
             case PONG -> new WireMessage.Pong(input.readLong());
             case GOODBYE -> new WireMessage.Goodbye(readString(input));
         };
+    }
+
+    private static boolean readBoolean(DataInputStream input) throws IOException {
+        int value = input.readUnsignedByte();
+        if (value > 1) {
+            throw new ProtocolException("Boolean value must be encoded as 0 or 1");
+        }
+        return value == 1;
     }
 
     private static void writeString(DataOutputStream output, String value) throws IOException {
@@ -202,22 +213,26 @@ public final class MessageCodec {
     }
 
     private enum MessageType {
-        CLIENT_HELLO(1),
-        SERVER_HELLO(2),
-        REJECTED(3),
-        SCREEN_FRAME(4),
-        POINTER_INPUT(5),
-        KEYBOARD_INPUT(6),
-        CONTROL_STATE(7),
-        PING(8),
-        PONG(9),
-        GOODBYE(10),
-        RELEASE_ALL_INPUTS(11);
+        CLIENT_HELLO(1, 8, 8 + 2 * MAX_STRING_BYTES),
+        SERVER_HELLO(2, 25, 25),
+        REJECTED(3, 4, 4 + MAX_STRING_BYTES),
+        SCREEN_FRAME(4, 29, 28 + MAX_IMAGE_BYTES),
+        POINTER_INPUT(5, 10, 10),
+        KEYBOARD_INPUT(6, 9, 9),
+        CONTROL_STATE(7, 1, 1),
+        PING(8, 8, 8),
+        PONG(9, 8, 8),
+        GOODBYE(10, 4, 4 + MAX_STRING_BYTES),
+        RELEASE_ALL_INPUTS(11, 0, 0);
 
         private final int code;
+        private final int minimumBytes;
+        private final int maximumBytes;
 
-        MessageType(int code) {
+        MessageType(int code, int minimumBytes, int maximumBytes) {
             this.code = code;
+            this.minimumBytes = minimumBytes;
+            this.maximumBytes = maximumBytes;
         }
 
         private static MessageType fromCode(int code) throws ProtocolException {
